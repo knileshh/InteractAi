@@ -1,10 +1,9 @@
 # Ask Ai
------
 
 This is a simple MERN application that I'm making for my college project.
 
 ## Features
-----
+
 
 * Can work with images
     - detect the contents of images.
