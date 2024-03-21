@@ -1,8 +1,18 @@
-# React + Vite
+# Ask Ai
+-----
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple MERN application that I'm making for my college project.
 
-Currently, two official plugins are available:
+## Features
+----
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* Can work with images
+    - detect the contents of images.
+    - can convert handwritten text to digital text.
+
+* Can answer any query you have
+
+* Is secured with modern standards
+
+* Soon will be deployed live on VPS 
+
