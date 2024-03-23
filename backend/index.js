@@ -1,25 +1,54 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import 'dotenv/config'
+import 'dotenv/config' //check this line if error.
+import cors from "cors"
+import bodyParser from "body-parser"
+import express from "express"
+const port = 3000;
 
+const app = express();
+
+app.use(cors());
+app.use(express.json()); // Use express.json() instead of deprecated bodyParser
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
-const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
-// const prompt = "Hi, can you see moon?"
+async function run(prompt, res) {
+    try {
+        // For text-only input, use the gemini-pro model
+        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
-async function run() {
-    // For text-only input, use the gemini-pro model
-    const model = genAI.getGenerativeModel({ model: "gemini-pro"});
-  
-    const prompt = "Give me 1 quote from well know books and also give it's author and book name, format should be as a puzzle. Keep it short"
-  
-    const result = await model.generateContentStream([prompt]);
-    // model.generateContentStream([prompt])
-    for await(const chunk of result.stream){
-        const chunkText = chunk.text()
-        console.log(chunkText)
+        const result = await model.generateContentStream([prompt]);
+
+        // Set appropriate headers for streaming
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
+        // Iterate through the stream and send chunks
+        for await (const chunk of result.stream) {
+            const chunkText = chunk.text(); //await here
+            res.write(`data: ${chunkText}\n\n`);
+            console.log(chunkText)
+        }
+
+        res.end();
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: error.message });
     }
-  }
-  
-  run();
-  
+}
+
+app.post('/', async (req, res) => {
+    // console.log(req.body);
+    const question = req.body?.question; // Use optional chaining
+
+    if (!question) {
+        return res.status(400).json({ error: 'Missing question in request body' });
+    }
+
+    await run(question, res);
+});
+
+app.listen(port, () => {
+    console.log(`Application listening on ${port}`);
+});
