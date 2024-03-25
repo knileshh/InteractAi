@@ -1,21 +1,16 @@
+// DataStream.jsx
 import React, { useState, useEffect } from 'react';
+import UploadFile from "./UploadFile.jsx";
+import FilePreview from "./FilePreview.jsx";
 
 const DataStream = () => {
     const [streamData, setStreamData] = useState([]);
     const [promptData, setPromptData] = useState("");
+    const [files, setFiles] = useState([]);
 
-    // useEffect(() => {
-    //     // console.log(promptData)
-    //
-    //
-    //     fetchData();
-    //
-    //     // Cleanup function if needed
-    //     return () => {
-    //         // Any cleanup code here
-    //     };
-    // }, []);
-
+    const handleFileChange = (newFiles) => {
+        setFiles(newFiles);
+    };
 
     const fetchData = async (userData) => {
         const userPrompt = userData
@@ -31,6 +26,7 @@ const DataStream = () => {
 
             const reader = response.body.getReader();
 
+            // eslint-disable-next-line no-constant-condition
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) {
@@ -46,15 +42,9 @@ const DataStream = () => {
     };
 
     return (<>
-            {/*<div className="max-h-80 overflow-y-auto max-w-3xl bg-gray-200 rounded shadow-md p-4">*/}
-            {/*    /!* Render the streaming data here *!/*/}
-            {/*    {streamData.map((data, index) => (*/}
-            {/*        <div key={index}>{data}</div>*/}
-            {/*    ))}*/}
-            {/*</div>*/}
-
             <div className="flex min-h-screen justify-center bg-slate-900 p-4">
-                <div className="max-w-2xl rounded bg-zinc-900 p-4 text-red-200 shadow-md">{/* Render the streaming data here */}
+                <div
+                    className="max-w-2xl rounded bg-zinc-900 p-4 text-red-200 shadow-md">{/* Render the streaming data here */}
                     {streamData.map((data, index) => (
                         <div key={index}>{data}</div>
                     ))}</div>
@@ -62,14 +52,22 @@ const DataStream = () => {
 
                 <div
                     className="fixed bottom-1 left-1/2 m-8 flex min-h-12 w-1/4 -translate-x-1/2 items-center justify-between overflow-hidden rounded-lg bg-slate-300 px-0">
-                    <input type="text" placeholder="Enter your query" onChange={ (e) => {
+                    <input type="text" placeholder="Enter your query" onChange={(e) => {
                         setPromptData(e.target.value)
-                        // console.log(promptData)
                     }} className="bg-slate-00 h-12 grow pl-2 outline-none"/>
-                    <span><button type="button" onClick={ () => fetchData(promptData) } className="border bg-slate-500 px-1">Ask ❓❓</button></span>
-                    <span><button type="button" className="border bg-slate-500 px-1">File 📎📍</button></span>
+                    <span><button type="button" onClick={() => fetchData(promptData)}
+                                  className="border bg-slate-500 px-1">Ask ❓❓</button></span>
+                    <span><UploadFile onFileChange={handleFileChange}/></span>
                 </div>
+
+            {/*    File preview div */}
+            <div>
+                <FilePreview files={files}/>
             </div>
+
+            {/* Parent div main one*/}
+            </div>
+
         </>
     );
 };
