@@ -3,14 +3,27 @@ import 'dotenv/config' //check this line if error.
 import cors from "cors"
 import bodyParser from "body-parser"
 import express from "express"
+import multer from 'multer'
+
+import fs from "fs"
 const port = 3000;
 
 const app = express();
 
 app.use(cors());
-app.use(express.json()); // Use express.json() instead of deprecated bodyParser
+app.use(bodyParser.json()); // Use express.json() instead of deprecated bodyParser
 
+// eslint-disable-next-line no-undef
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
+
+const fileToGenerativePart = (path, mimeType) => {
+    return {
+        inlineData: {
+            data: Buffer.from(fs.readFileSync(path)).toString("base64"),
+            mimeType
+        },
+    };
+}
 
 async function run(prompt, res) {
     try {
@@ -38,6 +51,40 @@ async function run(prompt, res) {
     }
 }
 
+/*image related function*/
+
+const runImage = async () => {
+    // For text-and-image input (multimodal), use the gemini-pro-vision model
+    const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+
+    const prompt = "What are the contents of these files";
+
+    const imageParts = [
+        fileToGenerativePart("./images/image1.png", "image/png"), //change to jpg
+        fileToGenerativePart("./images/image2.jpeg", "image/jpeg"),
+    ];
+
+    const result = await model.generateContent([prompt, ...imageParts]);
+    const response = await result.response;
+    const text = response.text();
+    console.log(text);
+}
+
+// Multer related
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now()
+        cb(null, file.originalname + '-' + uniqueSuffix + ".jpg")
+    }
+})
+
+// const upload = multer({ dest: 'uploads/' });
+const upload = multer({ storage: storage })
+
+
 app.post('/', async (req, res) => {
     // console.log(req.body);
     const question = req.body?.question; // Use optional chaining
@@ -47,6 +94,19 @@ app.post('/', async (req, res) => {
     }
 
     await run(question, res);
+});
+
+
+app.post('/image', upload.single('avatar'), (req, res, next) => {
+    // req.file is the `avatar` file
+    const { originalname } = req.file;
+
+    console.log(req.file);
+
+    // Send a message to the user indicating successful upload
+    res.json("image Successfully Uploaded: ");
+
+    // Redirect after
 });
 
 app.listen(port, () => {

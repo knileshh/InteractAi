@@ -1,5 +1,4 @@
-// UploadFile.jsx
-import {useState} from 'react';
+import { useState } from 'react';
 
 const UploadFile = ({ onFileChange }) => {
     const [files, setFiles] = useState([]);
@@ -11,10 +10,35 @@ const UploadFile = ({ onFileChange }) => {
     };
 
     const handleUpload = () => {
+        alert("Handle upload click")
         if (files.length > 0) {
-            // Perform file upload operation here
-            console.log('Uploading files:', files);
-            // You can use fetch, axios, or any other library to send the files to a server
+            // Create a FormData object
+            const formData = new FormData();
+
+            // Append each file to the FormData object
+            files.forEach(file => {
+                formData.append('avatar', file);
+            });
+
+            // Send the FormData object to the server using fetch
+            fetch('http://localhost:3000/image', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to upload files');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Handle successful response
+                    console.log('Files uploaded successfully:', data);
+                })
+                .catch(error => {
+                    // Handle error
+                    console.error('Error uploading files:', error);
+                });
         } else {
             alert('Please select at least one file');
         }
@@ -29,6 +53,7 @@ const UploadFile = ({ onFileChange }) => {
                     type="file"
                     multiple
                     style={{ display: 'none' }}
+                    name="avatar" // needs to be same for multer
                     onChange={handleFileInputChange}
                 />
             </label>
