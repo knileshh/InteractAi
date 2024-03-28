@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const UploadFile = ({ onFileChange }) => {
+const UploadFile = ({ onFileChange, promptData }) => {
     const [files, setFiles] = useState([]);
 
     const handleFileInputChange = (event) => {
@@ -10,7 +10,6 @@ const UploadFile = ({ onFileChange }) => {
     };
 
     const handleUpload = () => {
-        alert("Handle upload click")
         if (files.length > 0) {
             // Create a FormData object
             const formData = new FormData();
@@ -19,6 +18,8 @@ const UploadFile = ({ onFileChange }) => {
             files.forEach(file => {
                 formData.append('avatar', file);
             });
+
+            formData.append('promptData', promptData);
 
             // Send the FormData object to the server using fetch
             fetch('http://localhost:3000/image', {
@@ -33,6 +34,7 @@ const UploadFile = ({ onFileChange }) => {
                 })
                 .then(data => {
                     // Handle successful response
+                    alert("File uploaded successfully")
                     console.log('Files uploaded successfully:', data);
                 })
                 .catch(error => {

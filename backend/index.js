@@ -53,21 +53,24 @@ async function run(prompt, res) {
 
 /*image related function*/
 
-const runImage = async () => {
+const runImage = async (imagePath, imagePrompt) => {
     // For text-and-image input (multimodal), use the gemini-pro-vision model
     const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
 
-    const prompt = "What are the contents of these files";
+    // const prompt = "What are the contents of these files";
+    const prompt = imagePrompt
 
+    console.log(imagePath)
     const imageParts = [
-        fileToGenerativePart("./images/image1.png", "image/png"), //change to jpg
-        fileToGenerativePart("./images/image2.jpeg", "image/jpeg"),
+        fileToGenerativePart(`${imagePath}`, "image/jpg"), //change to jpg
+        fileToGenerativePart("./uploads/twoParrots.jpg", "image/jpeg"),
     ];
 
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;
     const text = response.text();
     console.log(text);
+    return text;
 }
 
 // Multer related
@@ -97,14 +100,21 @@ app.post('/', async (req, res) => {
 });
 
 
-app.post('/image', upload.single('avatar'), (req, res, next) => {
+app.post('/image', upload.single('avatar'), async (req, res, next) => {
     // req.file is the `avatar` file
-    const { originalname } = req.file;
+    const { originalname, path } = req.file;
+    const { promptData } = req.body
+    // console.log(req.body)
 
-    console.log(req.file);
+
+    // console.log(req.file);
+    // console.log(path)
+    const imageResult = await runImage(path, promptData)
+    // console.log(imageResult)
 
     // Send a message to the user indicating successful upload
-    res.json("image Successfully Uploaded: ");
+    res.json({"image Successfully Uploaded: ": originalname,
+                "Answer": imageResult}); //somehow res.send() wasn't working so changed to .json()
 
     // Redirect after
 });
