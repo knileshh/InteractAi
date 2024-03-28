@@ -7,9 +7,16 @@ const DataStream = () => {
     const [streamData, setStreamData] = useState([]);
     const [promptData, setPromptData] = useState("");
     const [files, setFiles] = useState([]);
+    const [responseText, setResponseText] = useState('');
+
 
     const handleFileChange = (newFiles) => {
         setFiles(newFiles);
+    };
+
+    const handleResponse = (data) => {
+        // Store the response text in state
+        setResponseText(data);
     };
 
     // Fetch data from gemini Just Text.
@@ -80,7 +87,7 @@ const DataStream = () => {
                     }} className="bg-slate-00 h-12 grow pl-2 outline-none"/>
                     <span><button type="button" onClick={() => fetchData(promptData)}
                                   className="border bg-slate-500 px-1">Ask ❓❓</button></span>
-                    <span><UploadFile onFileChange={handleFileChange} promptData={promptData}/></span>
+                    <span><UploadFile onFileChange={handleFileChange} promptData={promptData} onResponse={handleResponse}/></span>
                 </div>
 
             {/*    File preview div */}
@@ -88,7 +95,12 @@ const DataStream = () => {
                 <FilePreview files={files}/>
             </div>
 
-            {/* Parent div main one*/}
+            {/*    response from the server image*/}
+                <div className='text-2xl text-white'>
+                    <p>{responseText}</p>
+                </div>
+
+                {/* Parent div main one*/}
             </div>
 
         </>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const UploadFile = ({ onFileChange, promptData }) => {
+const UploadFile = ({ onFileChange, promptData, onResponse }) => {
     const [files, setFiles] = useState([]);
 
     const handleFileInputChange = (event) => {
@@ -35,7 +35,8 @@ const UploadFile = ({ onFileChange, promptData }) => {
                 .then(data => {
                     // Handle successful response
                     alert("File uploaded successfully")
-                    console.log('Files uploaded successfully:', data);
+                    onResponse(data.Answer);
+                    console.log('Files uploaded successfully->>>:', data);
                 })
                 .catch(error => {
                     // Handle error
