@@ -2,6 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import UploadFile from "./UploadFile.jsx";
 import FilePreview from "./FilePreview.jsx";
+import SearchInput from "./floatUI/SearchInput.jsx";
+import RenderResponseImg from "./RenderResponseImg.jsx";
+import AlertInfo from "./floatUI/AlertInfo.jsx";
+
 
 const DataStream = () => {
     const [streamData, setStreamData] = useState([]);
@@ -12,6 +16,7 @@ const DataStream = () => {
 
     const handleFileChange = (newFiles) => {
         setFiles(newFiles);
+        // setStreamData(newFiles)
     };
 
     const handleResponse = (data) => {
@@ -79,7 +84,7 @@ const DataStream = () => {
                         <div key={index}>{data}</div>
                     ))}</div>
 
-
+                {/*Old Input box with two buttons.*/}
                 <div
                     className="fixed bottom-1 left-1/2 m-8 flex min-h-12 w-1/4 -translate-x-1/2 items-center justify-between overflow-hidden rounded-lg bg-slate-300 px-0">
                     <input type="text" placeholder="Enter your query" onChange={(e) => {
@@ -90,15 +95,27 @@ const DataStream = () => {
                     <span><UploadFile onFileChange={handleFileChange} promptData={promptData} onResponse={handleResponse}/></span>
                 </div>
 
+                {/*<SearchInput/>*/}
+
+
             {/*    File preview div */}
             <div>
                 <FilePreview files={files}/>
             </div>
 
             {/*    response from the server image*/}
-                <div className='text-2xl text-white'>
-                    <p>{responseText}</p>
-                </div>
+            {/*    <div className='text-2xl text-white'>*/}
+            {/*        <p>{responseText}</p>*/}
+            {/*    </div>*/}
+
+                {/*<RenderResponseImg response={responseText}/>*/}
+                {/*<Meteors/>*/}
+
+                {responseText && (
+                    <span>
+                        <AlertInfo response={responseText} setResponse={setResponseText}/>
+                    </span>
+                )}
 
                 {/* Parent div main one*/}
             </div>
