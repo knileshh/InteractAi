@@ -25,7 +25,7 @@ const UploadFile = ({ onFileChange, promptData, onResponse }) => {
             formData.append('promptData', promptData);
 
             // Send the FormData object to the server using fetch
-            fetch('http://localhost:3000/image', {
+            fetch('http://localhost:3000/images', {
                 method: 'POST',
                 body: formData,
             })

@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import UploadFile from "./UploadFile.jsx";
 import FilePreview from "./FilePreview.jsx";
-import SearchInput from "./floatUI/SearchInput.jsx";
-import RenderResponseImg from "./RenderResponseImg.jsx";
 import AlertInfo from "./floatUI/AlertInfo.jsx";
 
 
@@ -53,31 +51,7 @@ const DataStream = () => {
             console.error('Error fetching data:', error);
         }
     };
-    //
-    //
-    //
-    //
-    // MULTIMODAL
-    // Converts local file information to a GoogleGenerativeAI.Part object.
-    // function fileToGenerativePart(path, mimeType) {
-    //     return {
-    //         inlineData: {
-    //             data: Buffer.from(fs.readFileSync(path)).toString("base64"),
-    //             mimeType
-    //         },
-    //     };
-    // }
-    //
-    //
-    // const multiModalFetch = async ({imagePrompt}) => {
-    //
-    //
-    //     return (
-    //         <>
-    //
-    //         </>
-    //     )
-    // }
+
 
     return (<>
             <div className="flex min-h-screen justify-center bg-slate-900 p-4">
@@ -106,13 +80,6 @@ const DataStream = () => {
                 <FilePreview files={files}/>
             </div>
 
-            {/*    response from the server image*/}
-            {/*    <div className='text-2xl text-white'>*/}
-            {/*        <p>{responseText}</p>*/}
-            {/*    </div>*/}
-
-                {/*<RenderResponseImg response={responseText}/>*/}
-                {/*<Meteors/>*/}
 
                 {responseText && (
                     <span>

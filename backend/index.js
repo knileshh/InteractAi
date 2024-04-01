@@ -70,7 +70,7 @@ const runImage = async (imagePath, imagePrompt) => {
     // const prompt = "What are the contents of these files";
     const prompt = imagePrompt
 
-    console.log(imagePath)
+    console.log("image path in run images: - " +imagePath)
     const imageParts = [
         fileToGenerativePart(`${imagePath}`, "image/jpg"), //change to jpg
         fileToGenerativePart("./uploads/twoParrots.jpg", "image/jpeg"),
@@ -141,22 +141,27 @@ app.post('/singleImage', upload.single('avatar'), async (req, res, next) => {
     // Redirect after
 });
 
-app.post('/images', upload.single('avatar'), async function (req, res, next) {
+app.post('/images', upload.array('avatar', 16), async function (req, res, next) {
     // upload.array('avatar', 16)
-    // req.files is array of `photos` files
-    // req.body will contain the text fields, if there were any
-    // const { files } = req;
+    // upload.single('avatar')
+        // req.files is array of `photos` files
+        // req.body will contain the text fields, if there were any
+        // const { files } = req;
 
-    // const results = await Promise.all(files.map(async file => {
-        const { originalname, path } = req.file;
+        // const results = await Promise.all(files.map(async file => {
+    console.log(req)
+        // const { originalname, path } = req.files;
+
+    const [{originalname, path}] = req.files //VVVI array destructuring
         // return path;
-    console.log(path)
-    console.log(req.files)
-    // const { originalname, path} = req.file;
-    // const { promptData } = req.body;
+        // console.log("Path from request: - "+path)
+    console.log("File Path: - ", req.files[0].path);
+    console.log("Req files: - "+req.files)
+        // const { originalname, path} = req.file;
+        // const { promptData } = req.body;
 
     const promptData = "What are these"
-    // const imageResult = await runImage(path, promptData)
+        // const imageResult = await runImage(path, promptData)
 
     const imageResult = await runImage(path, promptData)
     //Here results is an object containing all the paths.
