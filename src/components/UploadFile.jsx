@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import AlertSuccess from "./floatUI/AlertSuccess.jsx";
+
 
 const UploadFile = ({ onFileChange, promptData, onResponse }) => {
     const [files, setFiles] = useState([]);
+
 
     const handleFileInputChange = (event) => {
         const newFiles = Array.from(event.target.files);
@@ -35,6 +38,7 @@ const UploadFile = ({ onFileChange, promptData, onResponse }) => {
                 .then(data => {
                     // Handle successful response
                     alert("File uploaded successfully")
+                    // setIsReceived("File uploaded Successfully")
                     onResponse(data.Answer);
                     console.log('Files uploaded successfully->>>:', data);
                 })
@@ -67,6 +71,13 @@ const UploadFile = ({ onFileChange, promptData, onResponse }) => {
             >
                 Upload
             </button>
+
+            {/*<span>*/}
+            {/*    {isReceived && (*/}
+            {/*        <AlertSuccess message={isReceived}/>*/}
+            {/*    )}*/}
+            {/*</span>*/}
+
         </div>
     );
 };

@@ -25,6 +25,16 @@ const fileToGenerativePart = (path, mimeType) => {
     };
 }
 
+// const fileToGenerativePart = (path, mimeType) => {
+//     const fileData = fs.readFileSync(path);
+//     return {
+//         inlineData: {
+//             data: fileData.toString('base64'),
+//             mimeType,
+//         },
+//     };
+// };
+
 async function run(prompt, res) {
     try {
         // For text-only input, use the gemini-pro model
@@ -66,11 +76,23 @@ const runImage = async (imagePath, imagePrompt) => {
         fileToGenerativePart("./uploads/twoParrots.jpg", "image/jpeg"),
     ];
 
+    // const imageParts = imagePath.map(imagePath => {
+    //     // const mimeType = path.endsWith('.png') ? 'image/png' : 'image/jpg';
+    //     // return fileToGenerativePart(imagePath, mimeType)
+    //     return fileToGenerativePart(imagePath, 'image/jpg')
+    //
+    // })
+
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;
     const text = response.text();
     console.log(text);
     return text;
+    //
+    // const responseTexts = await Promise.all(result.response.map(response => response.text()));
+    //
+    // console.log(responseTexts);
+    // return responseTexts;
 }
 
 // Multer related
@@ -100,7 +122,7 @@ app.post('/', async (req, res) => {
 });
 
 
-app.post('/image', upload.single('avatar'), async (req, res, next) => {
+app.post('/singleImage', upload.single('avatar'), async (req, res, next) => {
     // req.file is the `avatar` file
     const { originalname, path } = req.file;
     const { promptData } = req.body
@@ -108,7 +130,7 @@ app.post('/image', upload.single('avatar'), async (req, res, next) => {
 
 
     // console.log(req.file);
-    // console.log(path)
+    console.log(path)
     const imageResult = await runImage(path, promptData)
     // console.log(imageResult)
 
@@ -118,6 +140,31 @@ app.post('/image', upload.single('avatar'), async (req, res, next) => {
 
     // Redirect after
 });
+
+app.post('/images', upload.single('avatar'), async function (req, res, next) {
+    // upload.array('avatar', 16)
+    // req.files is array of `photos` files
+    // req.body will contain the text fields, if there were any
+    // const { files } = req;
+
+    // const results = await Promise.all(files.map(async file => {
+        const { originalname, path } = req.file;
+        // return path;
+    console.log(path)
+    console.log(req.files)
+    // const { originalname, path} = req.file;
+    // const { promptData } = req.body;
+
+    const promptData = "What are these"
+    // const imageResult = await runImage(path, promptData)
+
+    const imageResult = await runImage(path, promptData)
+    //Here results is an object containing all the paths.
+
+    // res.json({"image Successfully Uploaded: ": originalname,"Answer": imageResult}); //somehow res.send() wasn't working so changed to .json()
+    res.json({'Image Result': imageResult})
+})
+
 
 app.listen(port, () => {
     console.log(`Application listening on ${port}`);
