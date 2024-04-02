@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import {GoogleGenerativeAI} from "@google/generative-ai";
 import 'dotenv/config' //check this line if error.
 import cors from "cors"
 import bodyParser from "body-parser"
@@ -6,6 +6,7 @@ import express from "express"
 import multer from 'multer'
 
 import fs from "fs"
+
 const port = 3000;
 
 const app = express();
@@ -70,12 +71,25 @@ const runImage = async (imagePath, imagePrompt) => {
     // const prompt = "What are the contents of these files";
     const prompt = imagePrompt
 
-    console.log("image path in run images: - " +imagePath)
-    const imageParts = [
-        fileToGenerativePart(`${imagePath}`, "image/jpg"), //change to jpg
-        fileToGenerativePart("./uploads/twoParrots.jpg", "image/jpeg"),
-    ];
+    console.log("image path in run images: - ",imagePath.map( path => path))
+        // const imageParts = [
+        //     fileToGenerativePart(imagePath[0], "image/jpeg"), //change to jpg
+        //     fileToGenerativePart(imagePath[1], "image/jpeg"), //change to jpg
+        //
+        //     // fileToGenerativePart(`${imagePath}`, "image/jpg"), //change to jpg
+        //     // fileToGenerativePart(imagePath[2], "image/jpg"),
+        //     // fileToGenerativePart("./uploads/twoParrots.jpg", "image/jpeg"),
+        // ];
 
+    // const imageParts = []
+    // //
+    // imagePath.forEach( path => {
+    //     const part = fileToGenerativePart(`./${path}`, "image/jpg")
+    //     imageParts.push(part)
+    // })
+
+        const imageParts = imagePath.map(path => fileToGenerativePart(`./${path}`, "image/jpeg"));
+    // console.log("image parts wla : ", imageParts)
     // const imageParts = imagePath.map(imagePath => {
     //     // const mimeType = path.endsWith('.png') ? 'image/png' : 'image/jpg';
     //     // return fileToGenerativePart(imagePath, mimeType)
@@ -83,16 +97,21 @@ const runImage = async (imagePath, imagePrompt) => {
     //
     // })
 
+    const imagineParts = imagePath.map(path => {
+        return fileToGenerativePart(`${path}`, "image/jpg");
+    });
+
+    console.log("Imagine Parts: - ", imagineParts)
+    console.log("Image Parts: = ", imageParts)
+
+
+
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;
     const text = response.text();
     console.log(text);
     return text;
-    //
-    // const responseTexts = await Promise.all(result.response.map(response => response.text()));
-    //
-    // console.log(responseTexts);
-    // return responseTexts;
+
 }
 
 // Multer related
@@ -149,21 +168,24 @@ app.post('/images', upload.array('avatar', 16), async function (req, res, next) 
         // const { files } = req;
 
         // const results = await Promise.all(files.map(async file => {
-    console.log(req)
+    // console.log(req)
+
+    const mapFile = req.files.map( file => file.path)
+    console.log(mapFile)
         // const { originalname, path } = req.files;
 
     const [{originalname, path}] = req.files //VVVI array destructuring
         // return path;
         // console.log("Path from request: - "+path)
-    console.log("File Path: - ", req.files[0].path);
-    console.log("Req files: - "+req.files)
+    console.log("File Path: - ", req.files.map(file => file.path));
+    // console.log("Req files: - "+req.files)
         // const { originalname, path} = req.file;
         // const { promptData } = req.body;
 
-    const promptData = "What are these"
+    const promptData = "A detail descriptions for each of the images, point-wise with number."
         // const imageResult = await runImage(path, promptData)
 
-    const imageResult = await runImage(path, promptData)
+    const imageResult = await runImage(mapFile, promptData)
     //Here results is an object containing all the paths.
 
     // res.json({"image Successfully Uploaded: ": originalname,"Answer": imageResult}); //somehow res.send() wasn't working so changed to .json()
