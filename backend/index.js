@@ -56,22 +56,13 @@ async function run(prompt, res) {
 const runImage = async (imagePath, imagePrompt) => {
     // For text-and-image input (multimodal), use the gemini-pro-vision model
     const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
-
     const prompt = imagePrompt
-
-    console.log("image path in run images: - ",imagePath.map( path => path))
+    // console.log("image path in run images: - ",imagePath.map( path => path))
 
     const imageParts = imagePath.map(path => fileToGenerativePart(`./${path}`, "image/jpeg"));
 
-    const imagineParts = imagePath.map(path => {
-        return fileToGenerativePart(`${path}`, "image/jpg");
-    });
-
-    console.log("Imagine Parts: - ", imagineParts)
-    console.log("Image Parts: = ", imageParts)
-
-
-
+    // console.log("Imagine Parts: - ", imagineParts)
+    // console.log("Image Parts: = ", imageParts)
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;
     const text = response.text();
@@ -95,6 +86,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 
+//Handling text only queries.
 app.post('/', async (req, res) => {
     // console.log(req.body);
     const question = req.body?.question; // Use optional chaining
@@ -106,34 +98,15 @@ app.post('/', async (req, res) => {
     await run(question, res);
 });
 
-
-app.post('/singleImage', upload.single('avatar'), async (req, res, next) => {
-    // req.file is the `avatar` file
-    const { originalname, path } = req.file;
-    const { promptData } = req.body
-
-    console.log(path)
-    const imageResult = await runImage(path, promptData)
-
-    // Send a message to the user indicating successful upload
-    res.json({"image Successfully Uploaded: ": originalname,
-                "Answer": imageResult}); //somehow res.send() wasn't working so changed to .json()
-
-});
-
 app.post('/images', upload.array('avatar', 16), async function (req, res, next) {
 
-    const mapFile = req.files.map( file => file.path)
-    console.log(mapFile)
+    //Since, multer therefore body is being modified on contains prompt.
+    // console.log(JSON.stringify(req.body, null, 2))
 
-    const [{originalname, path}] = req.files //VVVI array destructuring
+    const mapPath = req.files.map( file => file.path)
+    const promptData = req.body.prompt
 
-    console.log("File Path: - ", req.files.map(file => file.path));
-
-
-    const promptData = "A detail descriptions for each of the images, point-wise with number."
-
-    const imageResult = await runImage(mapFile, promptData)
+    const imageResult = await runImage(mapPath, promptData)
     res.json({'Image Result': imageResult})
 })
 
