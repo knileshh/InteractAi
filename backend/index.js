@@ -14,7 +14,6 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json()); // Use express.json() instead of deprecated bodyParser
 
-// eslint-disable-next-line no-undef
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
 
 const fileToGenerativePart = (path, mimeType) => {
@@ -25,16 +24,6 @@ const fileToGenerativePart = (path, mimeType) => {
         },
     };
 }
-
-// const fileToGenerativePart = (path, mimeType) => {
-//     const fileData = fs.readFileSync(path);
-//     return {
-//         inlineData: {
-//             data: fileData.toString('base64'),
-//             mimeType,
-//         },
-//     };
-// };
 
 async function run(prompt, res) {
     try {
@@ -68,34 +57,11 @@ const runImage = async (imagePath, imagePrompt) => {
     // For text-and-image input (multimodal), use the gemini-pro-vision model
     const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
 
-    // const prompt = "What are the contents of these files";
     const prompt = imagePrompt
 
     console.log("image path in run images: - ",imagePath.map( path => path))
-        // const imageParts = [
-        //     fileToGenerativePart(imagePath[0], "image/jpeg"), //change to jpg
-        //     fileToGenerativePart(imagePath[1], "image/jpeg"), //change to jpg
-        //
-        //     // fileToGenerativePart(`${imagePath}`, "image/jpg"), //change to jpg
-        //     // fileToGenerativePart(imagePath[2], "image/jpg"),
-        //     // fileToGenerativePart("./uploads/twoParrots.jpg", "image/jpeg"),
-        // ];
 
-    // const imageParts = []
-    // //
-    // imagePath.forEach( path => {
-    //     const part = fileToGenerativePart(`./${path}`, "image/jpg")
-    //     imageParts.push(part)
-    // })
-
-        const imageParts = imagePath.map(path => fileToGenerativePart(`./${path}`, "image/jpeg"));
-    // console.log("image parts wla : ", imageParts)
-    // const imageParts = imagePath.map(imagePath => {
-    //     // const mimeType = path.endsWith('.png') ? 'image/png' : 'image/jpg';
-    //     // return fileToGenerativePart(imagePath, mimeType)
-    //     return fileToGenerativePart(imagePath, 'image/jpg')
-    //
-    // })
+    const imageParts = imagePath.map(path => fileToGenerativePart(`./${path}`, "image/jpeg"));
 
     const imagineParts = imagePath.map(path => {
         return fileToGenerativePart(`${path}`, "image/jpg");
@@ -145,50 +111,29 @@ app.post('/singleImage', upload.single('avatar'), async (req, res, next) => {
     // req.file is the `avatar` file
     const { originalname, path } = req.file;
     const { promptData } = req.body
-    // console.log(req.body)
 
-
-    // console.log(req.file);
     console.log(path)
     const imageResult = await runImage(path, promptData)
-    // console.log(imageResult)
 
     // Send a message to the user indicating successful upload
     res.json({"image Successfully Uploaded: ": originalname,
                 "Answer": imageResult}); //somehow res.send() wasn't working so changed to .json()
 
-    // Redirect after
 });
 
 app.post('/images', upload.array('avatar', 16), async function (req, res, next) {
-    // upload.array('avatar', 16)
-    // upload.single('avatar')
-        // req.files is array of `photos` files
-        // req.body will contain the text fields, if there were any
-        // const { files } = req;
-
-        // const results = await Promise.all(files.map(async file => {
-    // console.log(req)
 
     const mapFile = req.files.map( file => file.path)
     console.log(mapFile)
-        // const { originalname, path } = req.files;
 
     const [{originalname, path}] = req.files //VVVI array destructuring
-        // return path;
-        // console.log("Path from request: - "+path)
+
     console.log("File Path: - ", req.files.map(file => file.path));
-    // console.log("Req files: - "+req.files)
-        // const { originalname, path} = req.file;
-        // const { promptData } = req.body;
+
 
     const promptData = "A detail descriptions for each of the images, point-wise with number."
-        // const imageResult = await runImage(path, promptData)
 
     const imageResult = await runImage(mapFile, promptData)
-    //Here results is an object containing all the paths.
-
-    // res.json({"image Successfully Uploaded: ": originalname,"Answer": imageResult}); //somehow res.send() wasn't working so changed to .json()
     res.json({'Image Result': imageResult})
 })
 
