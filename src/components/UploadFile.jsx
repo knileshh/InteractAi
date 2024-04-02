@@ -39,8 +39,8 @@ const UploadFile = ({ onFileChange, promptData, onResponse }) => {
                     // Handle successful response
                     alert("File uploaded successfully")
                     // setIsReceived("File uploaded Successfully")
-                    onResponse(data.Answer);
-                    console.log('Files uploaded successfully->>>:', data);
+                    onResponse(data.imgResult);
+                    console.log('Files uploaded successfully->>>:', data.imgResult);
                 })
                 .catch(error => {
                     // Handle error
@@ -71,12 +71,6 @@ const UploadFile = ({ onFileChange, promptData, onResponse }) => {
             >
                 Upload
             </button>
-
-            {/*<span>*/}
-            {/*    {isReceived && (*/}
-            {/*        <AlertSuccess message={isReceived}/>*/}
-            {/*    )}*/}
-            {/*</span>*/}
 
         </div>
     );

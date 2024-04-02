@@ -85,6 +85,10 @@ const storage = multer.diskStorage({
 // const upload = multer({ dest: 'uploads/' });
 const upload = multer({ storage: storage })
 
+/********************* RouteHandling 👇**************************/
+/********************* RouteHandling 👇**************************/
+/********************* RouteHandling 👇**************************/
+
 
 //Handling text only queries.
 app.post('/', async (req, res) => {
@@ -104,10 +108,10 @@ app.post('/images', upload.array('avatar', 16), async function (req, res, next) 
     // console.log(JSON.stringify(req.body, null, 2))
 
     const mapPath = req.files.map( file => file.path)
-    const promptData = req.body.prompt
+    const promptData = req.body.promptData
 
     const imageResult = await runImage(mapPath, promptData)
-    res.json({'Image Result': imageResult})
+    res.json({'imgResult': imageResult})
 })
 
 
