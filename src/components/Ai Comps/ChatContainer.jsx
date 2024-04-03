@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import MessageCard from './MessageCard';
 
 const ChatContainer = () => {
@@ -14,10 +14,6 @@ const ChatContainer = () => {
     const handleMessageSubmit = (e) => {
         e.preventDefault();
         if (newMessage.trim()) {
-            // setMessages((prevMessages) => [
-            //     ...prevMessages,
-            //     { sender: 'user', text: newMessage },
-            // ]);
 
             setMessages((prevMessages) => [...prevMessages,{ sender: 'user', text: newMessage }]);
             // Just appending this to message

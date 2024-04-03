@@ -1,11 +1,11 @@
 // DataStream.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import UploadFile from "./UploadFile.jsx";
 import FilePreview from "./FilePreview.jsx";
 import AlertInfo from "./floatUI/AlertInfo.jsx";
 import AlertSuccess from "./floatUI/AlertSuccess.jsx";
-import Chat from "./Chat.jsx";
 import ChatContainer from "./Ai Comps/ChatContainer.jsx";
+import MessageCard from "./Ai Comps/MessageCard.jsx";
 
 
 const DataStream = () => {
@@ -17,7 +17,6 @@ const DataStream = () => {
 
     const handleFileChange = (newFiles) => {
         setFiles(newFiles);
-        // setStreamData(newFiles)
     };
 
     const handleResponse = (data) => {
@@ -56,47 +55,44 @@ const DataStream = () => {
     };
 
 
-    return (<>
-            {/*<div className="flex min-h-screen justify-center bg-slate-900 p-4">*/}
-            {/*    <div*/}
-            {/*        className="max-w-2xl rounded bg-zinc-900 p-4 text-red-200 shadow-md">/!* Render the streaming data here *!/*/}
-            {/*        {streamData.map((data, index) => (*/}
-            {/*            <div key={index}>{data}</div>*/}
-            {/*        ))}</div>*/}
+    return <>
+            <div className="flex min-h-screen justify-center bg-slate-900 p-4">
+                <div
+                    className="max-w-2xl rounded bg-zinc-900 p-4 text-red-200 shadow-md">{/* Render the streaming data here */}
+                    {streamData.map((data, index) => <div key={index}>{data}</div>)}</div>
 
-            {/*    /!*Old Input box with two buttons.*!/*/}
-            {/*    <div*/}
-            {/*        className="fixed bottom-1 left-1/2 m-8 flex min-h-12 w-1/4 -translate-x-1/2 items-center justify-between overflow-hidden rounded-lg bg-slate-300 px-0">*/}
-            {/*        <input type="text" placeholder="Enter your query" onChange={(e) => {*/}
-            {/*            setPromptData(e.target.value)*/}
-            {/*        }} className="bg-slate-00 h-12 grow pl-2 outline-none"/>*/}
-            {/*        <span><button type="button" onClick={() => fetchData(promptData)}*/}
-            {/*                      className="border bg-slate-500 px-1">Ask ❓❓</button></span>*/}
-            {/*        <span><UploadFile onFileChange={handleFileChange} promptData={promptData} onResponse={handleResponse}/></span>*/}
-            {/*    </div>*/}
-
-            {/*    /!*<SearchInput/>*!/*/}
+                {/*Old Input box with two buttons.*/}
+                {/* <LegacyInput setPromptData = */}
+                <div
+                    className="fixed bottom-1 left-1/2 m-8 flex min-h-12 w-1/4 -translate-x-1/2 items-center justify-between overflow-hidden rounded-lg bg-slate-300 px-0">
+                    <input type="text" placeholder="Enter your query" onChange={(e) => {
+                        setPromptData(e.target.value)
+                    }} className="bg-slate-00 h-12 grow pl-2 outline-none"/>
+                    <span><button type="button" onClick={() => fetchData(promptData)}
+                                  className="border bg-slate-500 px-1">Ask ❓❓</button></span>
+                    <span><UploadFile onFileChange={handleFileChange} promptData={promptData} onResponse={handleResponse}/></span>
+                </div>
 
 
-            {/*/!*    File preview div *!/*/}
-            {/*<div>*/}
-            {/*    <FilePreview files={files}/>*/}
-            {/*</div>*/}
+                {/*File preview div */}
+            <div>
+                <FilePreview files={files}/>
+            </div>
 
 
-            {/*    {responseText && (*/}
-            {/*        <span>*/}
-            {/*            /!*<AlertInfo response={responseText} setResponse={setResponseText}/>*!/*/}
-            {/*            <AlertSuccess response={responseText} setResponse={setResponseText}/>*/}
-            {/*        </span>*/}
-            {/*    )}*/}
+                {responseText && (
+                    <span>
+                        {/*<AlertInfo response={responseText} setResponse={setResponseText}/>*/}
+                        <AlertSuccess response={responseText} setResponse={setResponseText}/>
+                    </span>
+                )}
 
                 {/* Parent div main one*/}
-            {/*</div>*/}
-            {/*    <Chat />*/}
-        <ChatContainer/>
+            </div>
+
+
+        {/*<ChatContainer/>*/}
         </>
-    );
 };
 
 export default DataStream;

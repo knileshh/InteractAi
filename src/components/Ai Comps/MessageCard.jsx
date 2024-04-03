@@ -16,18 +16,18 @@ const MessageCard = ({ message, isAssistant }) => { //Message: the data , isAssi
                     className={`w-8 h-8 rounded-full ${
                         isAssistant ? 'bg-gray-300' : 'bg-blue-300'
                     } mr-2`}
-                />
+                ><img src="https://makeavatar.io/svgavatars/images/Male.webp" alt="Avatar"/></div>
 
 
-                {/*The name ChatGPT or You*/}
-                <span className={`text-sm font-semibold ${isAssistant ? 'text-gray-700' : 'text-blue-700'}`}>
+                    {/*The name ChatGPT or You*/}
+                    <span className={`text-sm font-semibold ${isAssistant ? 'text-gray-700' : 'text-blue-700'}`}>
                     {/*  If true then ChatGPT else You, After */}
-                    {isAssistant ? 'ChatGPT' : 'You'}
+                        {isAssistant ? 'ChatGPT' : 'You'}
                 </span>
 
 
-            </div>
-            <div className={`text-gray-800 ${isAssistant ? '' : 'text-blue-800'}`}>
+                </div>
+                <div className={`text-gray-800 ${isAssistant ? '' : 'text-blue-800'}`}>
                 {message}
             </div>
         </div>
