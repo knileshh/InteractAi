@@ -1,33 +1,65 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import MessageCard from './MessageCard';
 
 const ChatContainer = () => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [streamedMessage, setStreamedMessage] = useState('');
+    const [isSecondQuery, setIsSecondQuery] = useState(false);
+    const messageStreamRef = useRef(null);
 
-    //Just set a newMessage taking from the input field.
     const handleMessageChange = (e) => {
         setNewMessage(e.target.value);
     };
 
-    //Append the new message to message, and set new message to "", blank
-    const handleMessageSubmit = (e) => {
+    const handleMessageSubmit = async (e) => {
         e.preventDefault();
         if (newMessage.trim()) {
-
-            setMessages((prevMessages) => [...prevMessages,{ sender: 'user', text: newMessage }]);
-            // Just appending this to message
-
+            setMessages((prevMessages) => [...prevMessages, { sender: 'user', text: newMessage }]);
+            setStreamedMessage('');
+            setIsSecondQuery(true);
             setNewMessage('');
-            // Here, you can call your API to get the assistant's response
-            // and append it to the messages array using setMessages
+            await fetchData(newMessage);
         }
     };
+
+    const fetchData = async (userQuery) => {
+        try {
+            const response = await fetch('http://localhost:3000', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: userQuery }),
+            });
+
+            const reader = response.body.getReader();
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    break;
+                }
+                const data = new TextDecoder().decode(value);
+                setStreamedMessage((prevData) => prevData + data);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        const handleStreamedMessageChange = () => {
+            if (messageStreamRef.current) {
+                messageStreamRef.current.scrollTop = messageStreamRef.current.scrollHeight;
+            }
+        };
+
+        handleStreamedMessageChange();
+    }, [streamedMessage]);
 
     return (
         <div className="flex flex-col items-center">
             <div className="w-full max-w-screen-xl">
-                {/*iterating over message array to get the messages*/}
                 {messages.map((message, index) => (
                     <MessageCard
                         key={index}
@@ -35,15 +67,27 @@ const ChatContainer = () => {
                         isAssistant={message.sender === 'assistant'}
                     />
                 ))}
+                {isSecondQuery && (
+                    <div
+                        className="max-w-2xl mx-auto my-4 p-4 rounded-lg shadow-md bg-gray-100"
+                        ref={messageStreamRef}
+                    >
+                        <div className="flex items-center mb-2">
+                            <div className="w-8 h-8 rounded-full bg-gray-300 mr-2">
+                                <img src="https://makeavatar.io/svgavatars/images/Male.webp" alt="Avatar" />
+                            </div>
+                            <span className="text-sm font-semibold text-gray-700">ChatGPT</span>
+                        </div>
+                        <div className="text-gray-800 whitespace-pre-wrap">{streamedMessage}</div>
+                    </div>
+                )}
             </div>
 
-            {/*trigger handleMessageSubmit on submit, which setMessage[] and then newMessage[] to ""*/}
             <form onSubmit={handleMessageSubmit} className="w-full max-w-md">
                 <div className="flex items-center mt-4">
                     <input
                         type="text"
                         value={newMessage}
-                        // setting up a newMessage[]
                         onChange={handleMessageChange}
                         placeholder="Type your message..."
                         className="flex-grow px-4 py-2 mr-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

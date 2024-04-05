@@ -40,7 +40,9 @@ async function run(prompt, res) {
         // Iterate through the stream and send chunks
         for await (const chunk of result.stream) {
             const chunkText = chunk.text(); //await here
-            res.write(`data: ${chunkText}\n\n`);
+            // res.write(`data: ${chunkText}\n\n`);
+            res.write(`${chunkText}\n\n`);
+
             console.log(chunkText)
         }
 
