@@ -11,6 +11,9 @@ import TeamSection from "./TeamSection.jsx";
 import PeopleSay from "./PeopleSay.jsx";
 import FeatureSection from "./FeatureSection.jsx";
 import TechStack from "./TechStack.jsx";
+import TwoxTwoGrid from "./TwoxTwoGrid.jsx";
+import QuickView from "./QuickView.jsx";
+import NewsLetter from "./NewsLetter.jsx";
 
 export default function Layout() {
 
@@ -20,10 +23,13 @@ export default function Layout() {
             <HeroSection/>
             <FeatureSection/>
             <TechStack/>
+            <TwoxTwoGrid/>
             <TeamSection/>
             <TechnicalSpecification/>
             <PeopleSay/>
+            {/*<QuickView/>*/}
             <Stats/>
+            <NewsLetter/>
 
             {/*<Section1/>*/}
             {/*<Section2/>*/}
