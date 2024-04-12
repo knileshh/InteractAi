@@ -116,7 +116,7 @@ const ChatContainer = () => {
                             <div className="w-8 h-8 rounded-full bg-gray-300 mr-2">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Tao_symbol.svg/2048px-Tao_symbol.svg.png" alt="Avatar" />
                             </div>
-                            <span className="text-sm font-semibold text-gray-700">ChatGPT</span>
+                            <span className="text-sm font-semibold text-gray-700">Interact Ai</span>
                         </div>
                         <div className="text-gray-800 whitespace-pre-wrap">{streamedMessage}</div>
                     </div>
