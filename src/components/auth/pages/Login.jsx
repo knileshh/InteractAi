@@ -23,12 +23,18 @@ const Login = () => {
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+    };
+
     return (
         <div>
             <h2>Login</h2>
             {error && <p>{error}</p>}
-            {isLoggedIn && <Welcome />}
-            {!isLoggedIn && (
+            {isLoggedIn ? (
+                <Welcome handleLogout={handleLogout} />
+            ) : (
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
@@ -48,5 +54,4 @@ const Login = () => {
         </div>
     );
 };
-
 export default Login;
