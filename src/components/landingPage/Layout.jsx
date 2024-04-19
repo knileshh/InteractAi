@@ -19,7 +19,6 @@ export default function Layout() {
 
     return (
         <div className="overflow-y-auto snap snap-y snap-mandatory scroll-smooth h-screen">
-            {/*<Header/>*/}
             <HeroSection/>
             <FeatureSection/>
             <TechStack/>
@@ -27,15 +26,10 @@ export default function Layout() {
             <TeamSection/>
             <TechnicalSpecification/>
             <PeopleSay/>
-            {/*<QuickView/>*/}
+
             <Stats/>
             <NewsLetter/>
 
-            {/*<Section1/>*/}
-            {/*<Section2/>*/}
-            {/*<Section3/>*/}
-            {/*<Section4/>*/}
-            {/*<Footer/>*/}
         </div>
     )
 }
