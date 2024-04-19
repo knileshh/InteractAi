@@ -87,7 +87,7 @@ const DataStream = () => {
                     </span>
                 )}
 
-                {/* Parent div main one*/}
+                {/* Parent div dbMain.js one*/}
             </div>
 
 
