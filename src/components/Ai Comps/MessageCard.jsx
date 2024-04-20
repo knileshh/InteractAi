@@ -1,5 +1,5 @@
 import React from 'react';
-
+import ReactMarkdown from 'react-markdown';
 const MessageCard = ({ message, isAssistant }) => {
     if (!message) {
         // Render nothing if the message is falsy (e.g., empty string)
@@ -17,7 +17,7 @@ const MessageCard = ({ message, isAssistant }) => {
                 </span>
             </div>
             <div className={`text-gray-800 ${isAssistant ? '' : 'text-blue-800'}`}>
-                {message}
+                <ReactMarkdown>{message}</ReactMarkdown>
             </div>
         </div>
     );
