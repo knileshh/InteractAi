@@ -1,4 +1,4 @@
-import OnlyLogo from "../interactAi/OnlyLogo.png"
+import OnlyLogo from "../Assets/OnlyLogo.png"
 import './App.css';
 import { Link } from "react-router-dom"
 import ChatContainer from "./components/Ai Comps/ChatContainer.jsx";

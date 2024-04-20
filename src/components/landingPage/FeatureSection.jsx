@@ -1,5 +1,5 @@
 import { CloudArrowUpIcon, LockClosedIcon, ServerIcon } from '@heroicons/react/20/solid'
-import img from "../../../interactAi/img.png"
+import img from "../../../Assets/img.png"
 
 const features = [
     {

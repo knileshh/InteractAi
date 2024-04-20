@@ -10,7 +10,7 @@ const MessageCard = ({ message, isAssistant }) => {
         <div className={`max-w-2xl mx-auto my-4 p-4 rounded-lg shadow-md ${isAssistant ? 'bg-red-100' : 'bg-blue-100'}`}>
             <div className="flex items-center mb-2">
                 <div className={`w-8 h-8 rounded-full ${isAssistant ? 'bg-white-300' : 'bg-blue-300'} mr-2`}>
-                    {isAssistant ? <img src="../../../interactAi/OnlyLogo.png" alt="Avatar" /> : <img src="../../../interactAi/avatar.png"/>}
+                    {isAssistant ? <img src="../../../Assets/OnlyLogo.png" alt="Avatar" /> : <img src="../../../Assets/avatar.png"/>}
                 </div>
                 <span className={`text-sm font-semibold ${isAssistant ? 'text-red-700' : 'text-blue-700'}`}>
                     {isAssistant ? 'Interact Ai' : 'You'}

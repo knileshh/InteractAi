@@ -1,4 +1,4 @@
-import interactAiLOGO from "../../../interactAi/interactAiLOGO.png"
+import interactAiLOGO from "../../../Assets/interactAiLOGO.png"
 
 export default function SignIn(){
     return(
