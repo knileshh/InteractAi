@@ -114,7 +114,7 @@ const ChatContainer = () => {
                     >
                         <div className="flex items-center mb-2">
                             <div className="w-8 h-8 rounded-full bg-gray-300 mr-2">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Tao_symbol.svg/2048px-Tao_symbol.svg.png" alt="Avatar" />
+                                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExeW5qZzE0aG12MjdwMW5jaWUxMjBwOGw2YTYyMW1uM3VhcmJscWFmaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RgzryV9nRCMHPVVXPV/giphy.gif" alt="Avatar" />
                             </div>
                             <span className="text-sm font-semibold text-gray-700">Interact Ai</span>
                         </div>

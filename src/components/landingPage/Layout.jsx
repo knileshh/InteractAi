@@ -24,7 +24,7 @@ export default function Layout() {
             <TechStack/>
             <TwoxTwoGrid/>
             <TeamSection/>
-            <TechnicalSpecification/>
+            {/*<TechnicalSpecification/>*/}
             <PeopleSay/>
 
             <Stats/>
