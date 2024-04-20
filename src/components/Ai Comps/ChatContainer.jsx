@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import MessageCard from './MessageCard';
-import UploadFile from '../UploadFile';
-import FilePreview from '../FilePreview';
+import { FaPaperclip } from 'react-icons/fa';
+import FilePreview from "../FilePreview.jsx";
 
 const ChatContainer = () => {
     const [messages, setMessages] = useState([]);
@@ -16,14 +16,15 @@ const ChatContainer = () => {
         setNewMessage(e.target.value);
     };
 
-    const handleFileChange = (newFiles) => {
+    const handleFileChange = (e) => {
+        const newFiles = Array.from(e.target.files);
         setFiles(newFiles);
     };
 
-    const handleFileUpload = async (newFiles) => {
+    const handleFileUpload = async () => {
         try {
             const formData = new FormData();
-            newFiles.forEach((file) => {
+            files.forEach((file) => {
                 formData.append('avatar', file);
             });
             formData.append('promptData', newMessage);
@@ -54,7 +55,7 @@ const ChatContainer = () => {
             setIsLoading(true);
             setNewMessage('');
             if (files.length > 0) {
-                await handleFileUpload(files);
+                await handleFileUpload();
             } else {
                 await fetchData(newMessage);
             }
@@ -125,22 +126,28 @@ const ChatContainer = () => {
 
             <form onSubmit={handleMessageSubmit} className="w-full max-w-md flex items-center">
                 <div className="flex items-center mr-2">
-                    <UploadFile
-                        onFileChange={handleFileChange}
-                        onUpload={handleFileUpload}
+                    <label htmlFor="file-input" className="cursor-pointer">
+                        <FaPaperclip className="text-red-500 hover:text-red-700 text-2xl m-2" />
+                    </label>
+                    <input
+                        id="file-input"
+                        type="file"
+                        multiple
+                        onChange={handleFileChange}
+                        className="hidden"
                     />
                     <input
                         type="text"
                         value={newMessage}
                         onChange={handleMessageChange}
                         placeholder="Type your message..."
-                        className="flex-grow px-4 py-2 mr-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="flex-grow px-4 py-2 mr-2 rounded-md border border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500"
                     />
                     <FilePreview files={files} />
                 </div>
                 <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
                 >
                     Send
                 </button>

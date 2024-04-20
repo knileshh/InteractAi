@@ -7,7 +7,7 @@ function PromptBase() {
         <div className="bg-black rounded-md p-2">
           <input
             type="text"
-            className="w-full bg-black text-white text-xs outline-none border-none focus:ring-1 focus:ring-blue-400 p-2"
+            className="w-full bg-black text-white text-xs outline-none border-none focus:ring-1 focus:ring-red-400 p-2"
             placeholder="Enter your prompt..."
           />
         </div>
