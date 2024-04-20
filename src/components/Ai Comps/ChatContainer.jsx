@@ -125,7 +125,7 @@ const ChatContainer = () => {
             </div>
 
             <form onSubmit={handleMessageSubmit} className="w-full max-w-md flex items-center">
-                <div className="flex items-center mr-2">
+                <div className="flex items-center w-full">
                     <label htmlFor="file-input" className="cursor-pointer">
                         <FaPaperclip className="text-red-500 hover:text-red-700 text-2xl m-2" />
                     </label>
@@ -141,7 +141,7 @@ const ChatContainer = () => {
                         value={newMessage}
                         onChange={handleMessageChange}
                         placeholder="Type your message..."
-                        className="flex-grow px-4 py-2 mr-2 rounded-md border border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500"
+                        className="flex-grow px-2 py-2 mr-2 rounded-md border border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 w-full md:w-auto"
                     />
                     <FilePreview files={files} />
                 </div>
