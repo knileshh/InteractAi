@@ -1,5 +1,5 @@
 import {GoogleGenerativeAI} from "@google/generative-ai";
-import 'dotenv/config' //check this line if error.
+import 'dotenv/config' //check this pkg if errors.
 import cors from "cors"
 import bodyParser from "body-parser"
 import express from "express"
@@ -28,7 +28,7 @@ const fileToGenerativePart = (path, mimeType) => {
 async function run(prompt, res) {
     try {
         // For text-only input, use the gemini-pro model
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
         const result = await model.generateContentStream([prompt]);
 
@@ -57,7 +57,7 @@ async function run(prompt, res) {
 
 const runImage = async (imagePath, imagePrompt) => {
     // For text-and-image input (multimodal), use the gemini-pro-vision model
-    const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const prompt = imagePrompt
     // console.log("image path in run images: - ",imagePath.map( path => path))
 
