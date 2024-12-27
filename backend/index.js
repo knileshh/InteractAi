@@ -1,11 +1,10 @@
 import {GoogleGenerativeAI} from "@google/generative-ai";
-import 'dotenv/config' //check this pkg if errors.
+import * as dotenv from 'dotenv'
+dotenv.config()
 import cors from "cors"
 import bodyParser from "body-parser"
 import express from "express"
 import multer from 'multer'
-
-import fs from "fs"
 
 const port = 3000;
 
@@ -16,10 +15,10 @@ app.use(bodyParser.json()); // Use express.json() instead of deprecated bodyPars
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
 
-const fileToGenerativePart = (path, mimeType) => {
+const bufferToGenerativePart = (buffer, mimeType) => {
     return {
         inlineData: {
-            data: Buffer.from(fs.readFileSync(path)).toString("base64"),
+            data: buffer.toString("base64"),
             mimeType
         },
     };
@@ -55,36 +54,22 @@ async function run(prompt, res) {
 
 /*image related function*/
 
-const runImage = async (imagePath, imagePrompt) => {
+const runImage = async (imageBuffers, imagePrompt) => {
     // For text-and-image input (multimodal), use the gemini-pro-vision model
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const prompt = imagePrompt
-    // console.log("image path in run images: - ",imagePath.map( path => path))
 
-    const imageParts = imagePath.map(path => fileToGenerativePart(`./${path}`, "image/jpeg"));
+    const imageParts = imageBuffers.map(buffer => bufferToGenerativePart(buffer, "image/jpeg"));
 
-    // console.log("Imagine Parts: - ", imagineParts)
-    // console.log("Image Parts: = ", imageParts)
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;
     const text = response.text();
     console.log(text);
     return text;
-
 }
 
-// Multer related
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads')
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now()
-        cb(null, file.originalname + '-' + uniqueSuffix + ".jpg")
-    }
-})
-
-// const upload = multer({ dest: 'uploads/' });
+// Multer memory storage
+const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
 /********************* RouteHandling 👇**************************/
@@ -104,15 +89,11 @@ app.post('/', async (req, res) => {
     await run(question, res);
 });
 
-app.post('/images', upload.array('avatar', 16), async function (req, res, next) {
-
-    //Since, multer therefore body is being modified on contains prompt.
-    // console.log(JSON.stringify(req.body, null, 2))
-
-    const mapPath = req.files.map( file => file.path)
+app.post('/images', upload.array('avatar', 16), async function (req, res) {
+    const imageBuffers = req.files.map(file => file.buffer)
     const promptData = req.body.promptData
 
-    const imageResult = await runImage(mapPath, promptData)
+    const imageResult = await runImage(imageBuffers, promptData)
     res.json({'imgResult': imageResult})
 })
 
