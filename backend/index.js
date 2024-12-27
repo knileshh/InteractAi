@@ -90,11 +90,25 @@ app.post('/', async (req, res) => {
 });
 
 app.post('/images', upload.array('avatar', 16), async function (req, res) {
-    const imageBuffers = req.files.map(file => file.buffer)
-    const promptData = req.body.promptData
+    try{
 
-    const imageResult = await runImage(imageBuffers, promptData)
-    res.json({'imgResult': imageResult})
+        if(!req.files || req.files.length === 0){
+            return res.status(400).json({error: "Please provide an Image"});
+        }
+
+        const imageBuffers = req.files.map(file => file.buffer)
+        const promptData = req.body.promptData
+
+        if(!promptData){
+             return res.status(400).json({error: "Please provide a prompt"});
+        }
+    
+        const imageResult = await runImage(imageBuffers, promptData)
+        res.json({'imgResult': imageResult})
+    }catch(e){
+        console.log(e);
+        res.status(500).json({message: "Internal Server Error"});
+    }
 })
 
 
