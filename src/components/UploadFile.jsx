@@ -25,7 +25,7 @@ const UploadFile = ({ onFileChange, promptData, onResponse }) => {
             formData.append('promptData', promptData);
 
             // Send the FormData object to the server using fetch
-            fetch('http://localhost:3000/images', {
+            fetch('https://interact-ai-be.vercel.app/images', {
                 method: 'POST',
                 body: formData,
             })

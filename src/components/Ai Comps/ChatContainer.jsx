@@ -29,7 +29,7 @@ const ChatContainer = () => {
             });
             formData.append('promptData', newMessage);
 
-            const response = await fetch('http://localhost:3000/images', {
+            const response = await fetch('https://interact-ai-be.vercel.app/images', {
                 method: 'POST',
                 body: formData,
             });
@@ -67,7 +67,7 @@ const ChatContainer = () => {
     const fetchData = async (userData) => {
         const userPrompt = userData
         try {
-            const response = await fetch('http://localhost:3000', {
+            const response = await fetch('https://interact-ai-be.vercel.app/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
